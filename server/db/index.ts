@@ -1,0 +1,9 @@
+import { drizzle } from 'drizzle-orm/neon-http';
+import { neon } from '@neondatabase/serverless';
+import * as schema from './schema';
+
+const connectionString = (process.env.DATABASE_URL || process.env.NUXT_DATABASE_URL || '').trim();
+
+export const db = connectionString
+  ? drizzle(neon(connectionString), { schema })
+  : null;
