@@ -4,3 +4,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - wrangler
   - miniflare
+  - '@cloudflare/*'
