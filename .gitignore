@@ -23,6 +23,8 @@ logs
 .env.*
 !.env.example
 
-# vercel / netlify
+# vercel / netlify / cloudflare
 .vercel
 .netlify
+.wrangler
+.dev.vars

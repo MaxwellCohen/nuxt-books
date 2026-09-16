@@ -8,6 +8,13 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  nitro: {
+    // Vercel and Netlify keep auto-detecting. Workers Builds sets WORKERS_CI.
+    preset:
+      process.env.WORKERS_CI || process.env.CLOUDFLARE
+        ? 'cloudflare_module'
+        : undefined,
+  },
   runtimeConfig: {
     apiDelayMs: 0,
     databaseUrl: '',
