@@ -12,6 +12,7 @@ import { SAMPLE_BOOKS } from "../../shared/features/book/data/sample-books";
 import { getBookCoverUrl } from "../../shared/features/book/data/cover-images";
 import { db } from "../db";
 import { authors, books, bookToAuthor } from "../db/schema";
+import { withTtlCache } from "./catalog-cache";
 
 export type { BookDetails, BookSummary };
 
@@ -140,7 +141,7 @@ function getPreviewCount(filters: BookFilters): number {
   return filterPreview(filters).length;
 }
 
-export async function getBooksPage(query: BookQuery): Promise<BookSummary[]> {
+async function queryBooksPage(query: BookQuery): Promise<BookSummary[]> {
   const database = db;
   if (!database) return getPreviewBooks(query);
 
@@ -164,7 +165,9 @@ export async function getBooksPage(query: BookQuery): Promise<BookSummary[]> {
   });
 }
 
-export async function getBooksCount(filters: BookFilters): Promise<number> {
+export const getBooksPage = withTtlCache("getBooksPage", queryBooksPage);
+
+async function queryBooksCount(filters: BookFilters): Promise<number> {
   const database = db;
   if (!database) return getPreviewCount(filters);
 
@@ -175,7 +178,9 @@ export async function getBooksCount(filters: BookFilters): Promise<number> {
   return total;
 }
 
-export async function getBookById(id: string): Promise<BookDetails> {
+export const getBooksCount = withTtlCache("getBooksCount", queryBooksCount);
+
+async function queryBookById(id: string): Promise<BookDetails> {
   const bookId = Number(id);
   if (!Number.isInteger(bookId)) throw new Error("Invalid book ID");
 
@@ -213,3 +218,5 @@ export async function getBookById(id: string): Promise<BookDetails> {
   if (!book) throw new Error("Book not found");
   return withBookCover(book);
 }
+
+export const getBookById = withTtlCache("getBookById", queryBookById);
