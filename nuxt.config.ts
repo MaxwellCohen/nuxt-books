@@ -6,6 +6,9 @@ const HTML_CACHE_CONTROL = 'public, s-maxage=3600, stale-while-revalidate=86400'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  vue: {
+    vapor: true,
+  },
   experimental: {
     ssrStreaming: true,
   },

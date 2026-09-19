@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { XIcon } from "../ui/icons";
 
 const isOpen = useState("mobile-book-sidebar", () => false);

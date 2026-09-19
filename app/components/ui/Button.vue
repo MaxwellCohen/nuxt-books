@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { cn } from "#shared/utils";
 
 type Variant = "ghost" | "primary" | "secondary";

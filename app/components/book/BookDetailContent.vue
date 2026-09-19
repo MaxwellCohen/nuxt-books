@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { BookDetails } from "#shared/features/book/book-types";
 import { getApiDelayMs } from "#shared/url-state";
 

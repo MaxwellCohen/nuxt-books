@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { cn } from "#shared/utils";
 import { MonitorIcon, MoonIcon, SunIcon } from "../ui/icons";
 import type { Theme } from "../../composables/useTheme";

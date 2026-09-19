@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { thumbHashToDataURL } from "thumbhash";
 import {
   EMPTY_IMAGE_URL,

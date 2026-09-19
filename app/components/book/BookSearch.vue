@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { buildHref, withFilters } from "#shared/url-state";
 import { SearchIcon, XIcon } from "../ui/icons";
 

@@ -20,12 +20,12 @@
     "@vercel/functions": "^3.9.8",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
-    "nuxt": "^4.5.2",
+    "nuxt": "npm:nuxt-nightly@4.6.0-29827426.591be9c2",
     "postgres": "^3.4.9",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
     "thumbhash": "^0.1.1",
-    "vue": "^3.5.42",
+    "vue": "3.6.0-rc.9",
     "vue-router": "^5.3.1"
   },
   "devDependencies": {

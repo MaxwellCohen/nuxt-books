@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { buildHref } from "#shared/url-state";
 
 defineProps<{ idPrefix: string; mobile?: boolean }>();

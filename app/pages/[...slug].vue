@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 useHead({ title: "Page not found · Nuxt Books" });
 setResponseStatus(404);
 </script>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { ITEMS_PER_PAGE } from "#shared/features/book/book-constants";
 
 defineProps<{ count?: number }>();

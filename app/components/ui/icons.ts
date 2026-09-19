@@ -1,13 +1,10 @@
-import { h, type FunctionalComponent } from "vue";
+import { h, type FunctionalComponent, type VNode } from "vue";
 import { cn } from "#shared/utils";
 
 type IconProps = { class?: string };
 
-const Icon: FunctionalComponent<IconProps & { fill?: string }> = (
-  props,
-  { slots },
-) =>
-  h(
+function icon(props: IconProps & { fill?: string }, children: VNode[]) {
+  return h(
     "svg",
     {
       "aria-hidden": "true",
@@ -19,32 +16,33 @@ const Icon: FunctionalComponent<IconProps & { fill?: string }> = (
       "stroke-width": 2,
       viewBox: "0 0 24 24",
     },
-    slots.default?.(),
+    children,
   );
+}
 
 export const SearchIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("circle", { cx: "11", cy: "11", r: "8" }),
     h("path", { d: "m21 21-4.3-4.3" }),
   ]);
 
 export const XIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M18 6 6 18" }),
     h("path", { d: "m6 6 12 12" }),
   ]);
 
 export const ChevronLeftIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [h("path", { d: "m15 18-6-6 6-6" })]);
+  icon(props, [h("path", { d: "m15 18-6-6 6-6" })]);
 
 export const ChevronRightIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [h("path", { d: "m9 18 6-6-6-6" })]);
+  icon(props, [h("path", { d: "m9 18 6-6-6-6" })]);
 
 export const ChevronDownIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [h("path", { d: "m6 9 6 6 6-6" })]);
+  icon(props, [h("path", { d: "m6 9 6 6 6-6" })]);
 
 export const SlidersHorizontalIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M10 5H3" }),
     h("path", { d: "M12 19H3" }),
     h("path", { d: "M14 3v4" }),
@@ -56,13 +54,13 @@ export const SlidersHorizontalIcon: FunctionalComponent<IconProps> = (props) =>
   ]);
 
 export const ArrowLeftIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "m12 19-7-7 7-7" }),
     h("path", { d: "M19 12H5" }),
   ]);
 
 export const AlertTriangleIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", {
       d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
     }),
@@ -88,7 +86,7 @@ export const StarIcon: FunctionalComponent<IconProps> = (props) =>
   );
 
 export const SunIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("circle", { cx: "12", cy: "12", r: "4" }),
     h("path", { d: "M12 2v2" }),
     h("path", { d: "M12 20v2" }),
@@ -101,19 +99,19 @@ export const SunIcon: FunctionalComponent<IconProps> = (props) =>
   ]);
 
 export const MoonIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" }),
   ]);
 
 export const MonitorIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("rect", { width: "20", height: "14", x: "2", y: "3", rx: "2" }),
     h("path", { d: "M8 21h8" }),
     h("path", { d: "M12 17v4" }),
   ]);
 
 export const BookOpenIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M12 7v14" }),
     h("path", {
       d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
@@ -121,14 +119,14 @@ export const BookOpenIcon: FunctionalComponent<IconProps> = (props) =>
   ]);
 
 export const GlobeIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("circle", { cx: "12", cy: "12", r: "10" }),
     h("path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" }),
     h("path", { d: "M2 12h20" }),
   ]);
 
 export const CalendarDaysIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M8 2v4" }),
     h("path", { d: "M16 2v4" }),
     h("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
@@ -136,7 +134,7 @@ export const CalendarDaysIcon: FunctionalComponent<IconProps> = (props) =>
   ]);
 
 export const Building2Icon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M10 12h4" }),
     h("path", { d: "M10 8h4" }),
     h("path", { d: "M14 21v-3a2 2 0 0 0-4 0v3" }),
@@ -147,7 +145,7 @@ export const Building2Icon: FunctionalComponent<IconProps> = (props) =>
   ]);
 
 export const HashIcon: FunctionalComponent<IconProps> = (props) =>
-  h(Icon, props, () => [
+  icon(props, [
     h("path", { d: "M4 9h16" }),
     h("path", { d: "M4 15h16" }),
     h("path", { d: "M10 3 8 21" }),

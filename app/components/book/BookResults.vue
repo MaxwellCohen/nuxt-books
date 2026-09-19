@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { BookSummary } from "#shared/features/book/book-types";
 import { stringifySearchParams } from "#shared/url-state";
 

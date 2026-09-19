@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { PRIORITY_COVER_COUNT } from "#shared/features/book/book-constants";
 import type { BookSummary } from "#shared/features/book/book-types";
 import type { SearchParams } from "#shared/url-state";
