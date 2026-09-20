@@ -2,6 +2,7 @@ import type { H3Event } from "h3";
 import { toBookQuery } from "../../shared/features/book/book-utils";
 import { applyApiDelay } from "../utils/api-delay";
 import { getBooksPage } from "../utils/book-queries";
+import { hostDocumentCacheControl } from "../utils/catalog-cache";
 import {
   booksPageCacheKey,
   CATALOG_HTTP_CACHE_MAX_AGE,
@@ -19,10 +20,11 @@ const cachedBooksHandler = defineCachedEventHandler(booksHandler, {
   swr: true,
 });
 
-export default defineEventHandler((event) => {
-  if (shouldBypassCatalogHttpCache(event)) {
-    setHeader(event, "Cache-Control", "private, no-store");
-    return booksHandler(event);
-  }
-  return cachedBooksHandler(event);
+export default defineEventHandler(async (event) => {
+  const result = shouldBypassCatalogHttpCache(event)
+    ? await booksHandler(event)
+    : await cachedBooksHandler(event);
+  // Keep Nitro's in-process cache, but don't advertise s-maxage to clients.
+  setHeader(event, "Cache-Control", hostDocumentCacheControl());
+  return result;
 });
