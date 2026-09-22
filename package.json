@@ -8,8 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "preview:cloudflare": "CLOUDFLARE=1 nuxt build && wrangler dev",
-    "deploy:cloudflare": "CLOUDFLARE=1 nuxt build && wrangler deploy"
+    "preview:cloudflare": "CLOUDFLARE=1 nuxt build && npx --yes wrangler@4.132.0 dev",
+    "deploy:cloudflare": "CLOUDFLARE=1 nuxt build && npx --yes wrangler@4.132.0 deploy"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -26,8 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.5.1",
-    "tsx": "^4.23.13",
-    "wrangler": "^4.132.0"
+    "tsx": "^4.23.13"
   },
   "packageManager": "pnpm@11.24.0"
 }

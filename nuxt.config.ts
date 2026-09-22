@@ -9,9 +9,9 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   nitro: {
-    // Vercel and Netlify keep auto-detecting. Workers Builds sets WORKERS_CI.
+    // Only force Workers when CLOUDFLARE/WORKERS_CI is set. Vercel and Netlify auto-detect.
     preset:
-      process.env.WORKERS_CI || process.env.CLOUDFLARE
+      process.env.CLOUDFLARE || process.env.WORKERS_CI
         ? 'cloudflare_module'
         : undefined,
   },
