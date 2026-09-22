@@ -36,6 +36,10 @@ const placeholder = computed(() => {
 const showImage = computed(() =>
   readySrc.value !== failedSrc.value ? readySrc.value : null,
 );
+
+function onImageError() {
+  failedSrc.value = readySrc.value;
+}
 </script>
 
 <template>
@@ -46,28 +50,20 @@ const showImage = computed(() =>
         props.class,
       )
     "
-    :style="
-      placeholder
-        ? {
-            backgroundImage: `url(${placeholder})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }
-        : undefined
-    "
   >
-    <img
+    <NuxtImg
       v-if="showImage"
       :alt="title"
       class="absolute inset-0 h-full w-full object-cover"
       decoding="async"
-      :fetchpriority="priority ? 'high' : undefined"
+      fit="cover"
+      format="webp"
       :loading="priority ? 'eager' : 'lazy'"
+      :placeholder="placeholder"
+      :preload="priority ? { fetchPriority: 'high' } : false"
       :sizes="sizes"
       :src="showImage"
-      @error="
-        failedSrc = ($event.target as HTMLImageElement).getAttribute('src')
-      "
+      @error="onImageError"
     />
     <div
       v-else

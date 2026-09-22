@@ -1,6 +1,8 @@
 import tailwindcss from '@tailwindcss/vite';
 import { defineNuxtConfig } from 'nuxt/config';
 
+const isCloudflare = Boolean(process.env.CLOUDFLARE || process.env.WORKERS_CI);
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -10,16 +12,20 @@ export default defineNuxtConfig({
   experimental: {
     ssrStreaming: true,
   },
+  modules: ['@nuxt/image'],
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
+  // IPX needs Node; skip optimization on Cloudflare Workers builds.
+  image: {
+    provider: isCloudflare ? 'none' : 'ipx',
+    domains: ['images.gr-assets.com', 's.gr-assets.com'],
+    format: ['webp'],
+  },
   nitro: {
     // Only force Workers when CLOUDFLARE/WORKERS_CI is set. Vercel and Netlify auto-detect.
-    preset:
-      process.env.CLOUDFLARE || process.env.WORKERS_CI
-        ? 'cloudflare_module'
-        : undefined,
+    preset: isCloudflare ? 'cloudflare_module' : undefined,
   },
   runtimeConfig: {
     apiDelayMs: 0,

@@ -14,7 +14,7 @@ import {
 
 const props = defineProps<{ book: BookDetails }>();
 
-const DETAIL_SIZES = "(min-width: 768px) 18rem, 60vw";
+const DETAIL_SIZES = "60vw md:288px";
 
 const rating = computed(() => Number(props.book.average_rating));
 const hasRating = computed(

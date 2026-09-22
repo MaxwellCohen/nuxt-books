@@ -13,6 +13,9 @@ overrides:
   '@vue/runtime-vapor': 3.6.0-rc.9
   '@vue/server-renderer': 3.6.0-rc.9
   '@vue/shared': 3.6.0-rc.9
+# This branch pins nuxt-nightly + Vue 3.6 RC; keep age checks off so installs
+# don't fail on intentional same-day packages (pnpm 11 defaults to 1440).
+minimumReleaseAge: 0
 minimumReleaseAgeExclude:
   - '@vue/compiler-core@3.6.0-rc.9'
   - '@vue/compiler-dom@3.6.0-rc.9'

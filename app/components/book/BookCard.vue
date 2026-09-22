@@ -8,8 +8,7 @@ const props = defineProps<{
   priority: boolean;
 }>();
 
-const GRID_SIZES =
-  "(min-width: 1280px) 14vw, (min-width: 1024px) 16vw, (min-width: 768px) 20vw, (min-width: 640px) 25vw, 33vw";
+const GRID_SIZES = "33vw sm:25vw md:20vw lg:16vw xl:14vw";
 
 const href = computed(() => {
   const back = buildHref(props.searchParams);
