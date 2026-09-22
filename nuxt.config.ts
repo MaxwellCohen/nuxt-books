@@ -17,11 +17,23 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  // IPX needs Node; skip optimization on Cloudflare Workers builds.
+  // Auto-detects vercel/netlify providers in those deploys; IPX locally.
+  // Cloudflare Workers can't run IPX — skip optimization there.
   image: {
-    provider: isCloudflare ? 'none' : 'ipx',
+    provider: isCloudflare ? 'none' : 'auto',
     domains: ['images.gr-assets.com', 's.gr-assets.com'],
     format: ['webp'],
+    // Book covers use small vw sizes; Vercel only serves listed widths.
+    screens: {
+      cover: 160,
+      cover2x: 320,
+      cover3x: 480,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536,
+    },
   },
   nitro: {
     // Only force Workers when CLOUDFLARE/WORKERS_CI is set. Vercel and Netlify auto-detect.

@@ -5,3 +5,10 @@
 [build.environment]
   NODE_VERSION = "24"
   PNPM_FLAGS = "--shamefully-hoist"
+
+# Required for Netlify Image CDN remote sources (Goodreads covers).
+[images]
+  remote_images = [
+    "https://images\\.gr-assets\\.com/.*",
+    "https://s\\.gr-assets\\.com/.*",
+  ]
