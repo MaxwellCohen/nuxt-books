@@ -1,4 +1,6 @@
 <script setup vapor lang="ts">
+/** Tailwind `md` — mount desktop filters only when the aside is visible. */
+const isDesktop = useMediaQuery("(min-width: 768px)");
 </script>
 
 <template>
@@ -11,7 +13,7 @@
       <aside
         class="border-divider bg-surface dark:border-divider-dark dark:bg-surface-dark sticky top-0 hidden h-dvh w-72 shrink-0 flex-col border-r px-5 py-5 md:flex"
       >
-        <BookSidebar id-prefix="desktop" />
+        <BookSidebar v-if="isDesktop" id-prefix="desktop" />
       </aside>
 
       <div class="flex min-w-0 flex-1 flex-col">

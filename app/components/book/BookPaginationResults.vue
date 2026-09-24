@@ -1,17 +1,8 @@
 <script setup vapor lang="ts">
-import { stringifySearchParams } from "#shared/url-state";
-
 const { searchParams } = useCatalogParams();
-const queryKey = computed(() => stringifySearchParams(searchParams.value));
+const { data: catalog, pending } = await useCatalogBooks();
 
-const { data: totalResults, pending } = await useAsyncData<number>(
-  () => `books-count-${queryKey.value}`,
-  () =>
-    $fetch<number>("/api/books/count", {
-      query: { ...searchParams.value },
-    }),
-  { watch: [queryKey] },
-);
+const totalResults = computed(() => catalog.value?.total ?? 0);
 </script>
 
 <template>
@@ -22,7 +13,7 @@ const { data: totalResults, pending } = await useAsyncData<number>(
   >
     <BookPagination
       :search-params="searchParams"
-      :total-results="totalResults ?? 0"
+      :total-results="totalResults"
     />
   </div>
 </template>

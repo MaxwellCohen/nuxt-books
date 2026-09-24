@@ -1,7 +1,7 @@
 import type { H3Event } from "h3";
 import { toBookQuery } from "../../shared/features/book/book-utils";
 import { applyApiDelay } from "../utils/api-delay";
-import { getBooksPage } from "../utils/book-queries";
+import { getBooksCatalog } from "../utils/book-queries";
 import { hostDocumentCacheControl } from "../utils/catalog-cache";
 import {
   booksPageCacheKey,
@@ -11,7 +11,7 @@ import {
 
 async function booksHandler(event: H3Event) {
   const params = await applyApiDelay(getQuery(event));
-  return getBooksPage(toBookQuery(params));
+  return getBooksCatalog(toBookQuery(params));
 }
 
 const cachedBooksHandler = defineCachedEventHandler(booksHandler, {

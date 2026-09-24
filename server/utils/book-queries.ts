@@ -6,15 +6,23 @@ import {
   MIN_YEAR,
 } from "../../shared/features/book/book-constants";
 import { GENERATED_PREVIEW_BOOKS } from "../../shared/features/book/book-preview-catalog";
-import type { BookFilters, BookQuery } from "../../shared/features/book/book-utils";
-import type { BookDetails, BookSummary } from "../../shared/features/book/book-types";
+import {
+  toBookFilters,
+  type BookFilters,
+  type BookQuery,
+} from "../../shared/features/book/book-utils";
+import type {
+  BookDetails,
+  BookSummary,
+  BooksCatalogPage,
+} from "../../shared/features/book/book-types";
 import { SAMPLE_BOOKS } from "../../shared/features/book/data/sample-books";
 import { getBookCoverUrl } from "../../shared/features/book/data/cover-images";
 import { db } from "../db";
 import { authors, books, bookToAuthor } from "../db/schema";
 import { withTtlCache } from "./catalog-cache";
 
-export type { BookDetails, BookSummary };
+export type { BookDetails, BookSummary, BooksCatalogPage };
 
 const previewBooks: BookDetails[] = [
   ...SAMPLE_BOOKS,
@@ -115,19 +123,29 @@ function filterPreview({
   });
 }
 
-function getPreviewBooks(query: BookQuery): BookSummary[] {
+function toBookSummary(book: {
+  id: number;
+  title: string;
+  isbn: string | null;
+  image_url: string | null;
+  thumbhash: string | null;
+}): BookSummary {
+  const covered = withBookCover(book);
+  return {
+    id: covered.id,
+    title: covered.title,
+    image_url: covered.image_url,
+    thumbhash: covered.thumbhash,
+  };
+}
+
+function getPreviewCatalog(query: BookQuery): BooksCatalogPage {
+  const filtered = filterPreview(query);
   const start = (query.page - 1) * ITEMS_PER_PAGE;
-  return filterPreview(query)
-    .slice(start, start + ITEMS_PER_PAGE)
-    .map((book) => {
-      const covered = withBookCover(book);
-      return {
-        id: covered.id,
-        title: covered.title,
-        image_url: covered.image_url,
-        thumbhash: covered.thumbhash,
-      };
-    });
+  return {
+    books: filtered.slice(start, start + ITEMS_PER_PAGE).map(toBookSummary),
+    total: filtered.length,
+  };
 }
 
 function withBookCover<T extends { isbn: string | null; image_url: string | null; thumbhash: string | null }>(book: T): T {
@@ -137,13 +155,23 @@ function withBookCover<T extends { isbn: string | null; image_url: string | null
     : { ...book, image_url: imageUrl, thumbhash: null };
 }
 
-function getPreviewCount(filters: BookFilters): number {
-  return filterPreview(filters).length;
+async function queryBooksCount(filters: BookFilters): Promise<number> {
+  const database = db;
+  if (!database) return filterPreview(filters).length;
+
+  const rows = await database
+    .select({ total: count() })
+    .from(books)
+    .where(getWhereClause(filters));
+  return rows[0]?.total ?? 0;
 }
 
-async function queryBooksPage(query: BookQuery): Promise<BookSummary[]> {
+/** Cached count for empty-page fallback (no window row to read total from). */
+const getBooksCount = withTtlCache("getBooksCount", queryBooksCount);
+
+async function queryBooksCatalog(query: BookQuery): Promise<BooksCatalogPage> {
   const database = db;
-  if (!database) return getPreviewBooks(query);
+  if (!database) return getPreviewCatalog(query);
 
   const result = await database
     .select({
@@ -152,6 +180,7 @@ async function queryBooksPage(query: BookQuery): Promise<BookSummary[]> {
       image_url: books.image_url,
       thumbhash: books.thumbhash,
       title: books.title,
+      total: sql<number>`cast(count(*) over() as integer)`.mapWith(Number),
     })
     .from(books)
     .where(getWhereClause(query))
@@ -159,26 +188,21 @@ async function queryBooksPage(query: BookQuery): Promise<BookSummary[]> {
     .limit(ITEMS_PER_PAGE)
     .offset((query.page - 1) * ITEMS_PER_PAGE);
 
-  return result.map((book) => {
-    const { isbn: _isbn, ...summary } = withBookCover(book);
-    return summary;
-  });
+  if (result.length === 0) {
+    return {
+      books: [],
+      total: await getBooksCount(toBookFilters(query)),
+    };
+  }
+
+  const total = result[0]?.total ?? 0;
+  return {
+    books: result.map(({ total: _total, ...book }) => toBookSummary(book)),
+    total,
+  };
 }
 
-export const getBooksPage = withTtlCache("getBooksPage", queryBooksPage);
-
-async function queryBooksCount(filters: BookFilters): Promise<number> {
-  const database = db;
-  if (!database) return getPreviewCount(filters);
-
-  const [{ total }] = await database
-    .select({ total: count() })
-    .from(books)
-    .where(getWhereClause(filters));
-  return total;
-}
-
-export const getBooksCount = withTtlCache("getBooksCount", queryBooksCount);
+export const getBooksCatalog = withTtlCache("getBooksCatalog", queryBooksCatalog);
 
 async function queryBookById(id: string): Promise<BookDetails> {
   const bookId = Number(id);

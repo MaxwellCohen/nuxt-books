@@ -27,8 +27,8 @@ export function formatCount(n: number): string {
 }
 
 // The catalog read is driven by these seven values. `BookFilters` is the subset that
-// decides *which* books match; `page` only decides which slice of them you get, so the
-// total-count query takes `BookFilters` alone and stays cached across pages.
+// decides *which* books match; `page` only decides which slice of them you get.
+// Empty-page count fallbacks still key on `BookFilters` alone via `toBookFilters`.
 export type BookFilters = {
   isbns: string;
   language: string;

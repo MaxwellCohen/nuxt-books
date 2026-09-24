@@ -5,6 +5,12 @@ export type BookSummary = {
   thumbhash: string | null;
 };
 
+/** Single catalog payload: page slice + filtered total. */
+export type BooksCatalogPage = {
+  books: BookSummary[];
+  total: number;
+};
+
 export type BookDetails = BookSummary & {
   isbn: string | null;
   publisher: string | null;

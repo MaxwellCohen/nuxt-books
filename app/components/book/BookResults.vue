@@ -1,23 +1,13 @@
 <script setup vapor lang="ts">
-import type { BookSummary } from "#shared/features/book/book-types";
-import { stringifySearchParams } from "#shared/url-state";
-
 const { searchParams } = useCatalogParams();
-const queryKey = computed(() => stringifySearchParams(searchParams.value));
-
 const {
-  data: books,
+  data: catalog,
   pending,
   error,
   refresh,
-} = await useAsyncData<BookSummary[]>(
-  () => `books-${queryKey.value}`,
-  () =>
-    $fetch<BookSummary[]>("/api/books", {
-      query: { ...searchParams.value },
-    }),
-  { watch: [queryKey] },
-);
+} = await useCatalogBooks();
+
+const books = computed(() => catalog.value?.books ?? []);
 </script>
 
 <template>
@@ -37,6 +27,6 @@ const {
     :data-pending="pending ? '' : undefined"
     class="transition-opacity duration-200 ease-out data-[pending]:opacity-60 group-has-[[data-filtering]]:opacity-60"
   >
-    <BookGrid :books="books ?? []" :search-params="searchParams" />
+    <BookGrid :books="books" :search-params="searchParams" />
   </div>
 </template>

@@ -43,18 +43,6 @@ export function booksPageCacheKey(event: H3Event): string {
   });
 }
 
-export function booksCountCacheKey(event: H3Event): string {
-  const query = getQuery(event);
-  return encodeCacheKey({
-    language: queryParam(query, "language"),
-    list: queryParam(query, "list"),
-    pages: queryParam(query, "pages"),
-    rating: queryParam(query, "rating"),
-    search: queryParam(query, "search"),
-    year: queryParam(query, "year"),
-  });
-}
-
 export function bookByIdCacheKey(event: H3Event): string {
   return encodeCacheKey({
     id: getRouterParam(event, "id") ?? "",
