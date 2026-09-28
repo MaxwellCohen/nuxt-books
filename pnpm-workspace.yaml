@@ -4,10 +4,9 @@ allowBuilds:
   sharp: true
   unrs-resolver: false
   utf-8-validate: false
+# nuxt-nightly depends on @nuxt/cli-nightly@latest, which publishes several
+# times a day and would otherwise fail pnpm's default 24h minimumReleaseAge
+# check on CI (Vercel/Netlify/Cloudflare).
 minimumReleaseAgeExclude:
-  - '@nuxt/kit-nightly@4.6.0-29813110.5c8fe35d'
-  - '@nuxt/nitro-server-nightly@4.6.0-29813110.5c8fe35d'
-  - '@nuxt/schema-nightly@4.6.0-29813110.5c8fe35d'
-  - '@nuxt/vite-builder-nightly@4.6.0-29813110.5c8fe35d'
-  - '@nuxt/vite-server-nightly@4.6.0-29813110.5c8fe35d'
-  - nuxt-nightly@4.6.0-29813110.5c8fe35d
+  - nuxt-nightly
+  - '@nuxt/*-nightly'
