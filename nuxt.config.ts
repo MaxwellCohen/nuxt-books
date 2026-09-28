@@ -50,6 +50,11 @@ export default defineNuxtConfig({
     prefetchPreloadTags: true,
     early404: true,
   },
+  features: {
+    // Production SSR embeds entry and component CSS in the HTML.
+    // Nuxt keeps this off in dev so stylesheet HMR still works.
+    inlineStyles: true,
+  },
   image: {
     // Cloudflare Workers can't run IPX / sharp — skip optimization there.
     provider: isCloudflare ? 'none' : 'auto',
