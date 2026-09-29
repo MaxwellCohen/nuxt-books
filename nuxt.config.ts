@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 
 const isCloudflare = Boolean(
@@ -78,6 +79,13 @@ export default defineNuxtConfig({
     storage: {
       cache: cacheStorage(),
     },
+    alias: isCloudflare
+      ? {
+          'pg-native': fileURLToPath(
+            new URL('./server/lib/db/pg-native-stub.cjs', import.meta.url),
+          ),
+        }
+      : undefined,
   },
   // Nuxt requires a cache route rule to generate runtime _payload.json routes.
   routeRules: {

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "nuxt-books-optimized",
+  "name": "nuxt-books-optimized-max",
   "main": ".output/server/index.mjs",
   "compatibility_date": "2026-09-15",
   "compatibility_flags": ["nodejs_compat"],
@@ -14,7 +14,7 @@
   "kv_namespaces": [
     {
       "binding": "CACHE",
-      "id": "124cb424a32b420b8b2015fd528f3ab9"
+      "id": "f930a51b26aa472a9eb38433e37d79ba"
     }
   ]
 }
