@@ -8,6 +8,11 @@ const isCloudflare = process.env.NITRO_PRESET?.startsWith('cloudflare') ?? false
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
   css: ['~/assets/css/main.css'],
+  build: {
+    // @lucide/vue's CommonJS build require()s Vue's ESM server entry, which
+    // fails on Netlify's Node runtime (ERR_REQUIRE_ESM). Bundle it instead.
+    transpile: ['@lucide/vue'],
+  },
   features: {
     // feature-tests/css-inlining: embed entry + component CSS in SSR HTML.
     inlineStyles: true,
