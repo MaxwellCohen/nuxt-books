@@ -82,7 +82,9 @@ test('pagination fetches an extracted payload and reuses the browser cache', asy
   await page.waitForURL(url => url.searchParams.get('page') === '2');
   await expect(page.getByText(/Page 2 of [\d,]+/)).toBeVisible();
   await expect.poll(() => payloads.length).toBeGreaterThan(0);
-  expect(payloads.every(payload => payload.url.includes('_b='))).toBe(true);
+  // Nuxt 4.7 no longer adds the `_b` build-id query to cached payload routes;
+  // it checks the build id inside the payload instead, so URLs stay cacheable across deploys.
+  expect(payloads.every(payload => !payload.url.includes('_b='))).toBe(true);
   expect(payloads.every(payload => payload.cacheControl === 'public, max-age=300, s-maxage=300')).toBe(true);
   const initialRequestCount = cacheHits.length;
 
