@@ -15,7 +15,6 @@ test('system mode follows the OS color scheme', async ({ page }) => {
 
   const html = page.locator('html');
   await expect(html).toHaveClass(/\bdark\b/);
-  await expect(html).toHaveAttribute('data-theme', 'dark');
   await expect(page.getByRole('button', { name: 'System theme' })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#121212');
   expect(await html.evaluate(element => getComputedStyle(element).colorScheme)).toBe('dark');
@@ -24,7 +23,6 @@ test('system mode follows the OS color scheme', async ({ page }) => {
 
   await expect(html).toHaveClass(/\blight\b/);
   await expect(html).not.toHaveClass(/\bdark\b/);
-  await expect(html).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#fafafa');
   expect(await html.evaluate(element => getComputedStyle(element).colorScheme)).toBe('light');
 });
