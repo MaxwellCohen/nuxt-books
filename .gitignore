@@ -51,3 +51,8 @@ thumbhash_update_checkpoint.json
 /local.db
 /local.db-shm
 /local.db-wal
+
+# feature tests
+/.netlify
+/dist
+/feature-tests/.report-*.json

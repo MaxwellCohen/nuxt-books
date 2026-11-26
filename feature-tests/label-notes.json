@@ -1,0 +1,11 @@
+{
+  "third-party-scripts": {
+    "note": "1st-party claim rests on @nuxt/scripts useScript (official module, verified: deferred onNuxtReady load). Worker offload is NOT self-contained: useScript partytown:true only renders <script type=\"text/partytown\">; in a one-off build without @nuxtjs/partytown the tag was emitted, /~partytown/partytown.js returned 404 and the script was never fetched or run. With @nuxtjs/partytown installed it runs via the worker (this spec)."
+  },
+  "reactivity": {
+    "note": "Passes at Vue's granularity: setup never re-runs and the state-owning component never re-renders, but the component that reads the ref re-runs its render effect (VDOM, no Vapor mode in Vue 3.5)."
+  },
+  "css-inlining": {
+    "note": "Nuxt's default (features.inlineStyles = id => id.includes('.vue')) already inlines SFC CSS; `true` additionally inlines global CSS (0 stylesheet links remain)."
+  }
+}

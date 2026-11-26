@@ -1,13 +1,24 @@
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
+
+// feature-tests/multi-host-deployment: Workers can't bundle pg's optional native addon
+// (same shim as the nuxt-books-optimized-max branch).
+const isCloudflare = process.env.NITRO_PRESET?.startsWith('cloudflare') ?? false;
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
   css: ['~/assets/css/main.css'],
+  features: {
+    // feature-tests/css-inlining: embed entry + component CSS in SSR HTML.
+    inlineStyles: true,
+  },
   devtools: { enabled: true },
   future: {
     compatibilityVersion: 5,
   },
   experimental: {
+    // feature-tests/islands: server components (*.server.vue) / <NuxtIsland>.
+    componentIslands: true,
     // https://nuxt.com/blog/v4-5#%EF%B8%8F-forwarded-preload-hints-on-prefetch
     prefetchPreloadTags: true,
     early404: true
@@ -16,10 +27,36 @@ export default defineNuxtConfig({
     domains: ['images.gr-assets.com', 's.gr-assets.com'],
     quality: 82,
   },
-  modules: ['@nuxt/image', '@nuxtjs/color-mode', '@nuxt/eslint', '@vercel/analytics', '@vercel/speed-insights'],
+  modules: [
+    '@nuxt/image',
+    '@nuxtjs/color-mode',
+    '@nuxt/eslint',
+    '@vercel/analytics',
+    '@vercel/speed-insights',
+    // feature-tests: official modules exercised by /feature-tests/*.
+    '@nuxt/fonts',
+    '@nuxt/scripts',
+    '@nuxtjs/partytown',
+  ],
   nitro: {
+    alias: isCloudflare
+      ? { 'pg-native': fileURLToPath(new URL('./server/lib/db/pg-native-stub.cjs', import.meta.url)) }
+      : undefined,
     future: {
       nativeSWR: true,
+    },
+    // Rules live under nitro.routeRules: with this Nuxt nightly, the top-level
+    // routeRules type is built from Nitro's augmented route types and drops
+    // cache/prerender, while nitro.routeRules uses Nitro's own types.
+    // Nuxt requires a cache route rule to generate runtime _payload.json routes.
+    routeRules: {
+      '/**': { cache: { headersOnly: true, maxAge: 3600 } },
+      '/api/**': { cache: false },
+      // feature-tests/font-optimization: preload the Inter face used on that route only.
+      '/feature-tests/font-optimization': { fonts: { preload: { Inter: true } } },
+      // feature-tests/render-modes: one prerendered, one per-request SSR (default), one client-only.
+      '/feature-tests/render-modes/prerendered': { prerender: true },
+      '/feature-tests/render-modes/spa': { ssr: false },
     },
     storage: {
       cache: {
@@ -27,11 +64,6 @@ export default defineNuxtConfig({
         driver: process.env.VERCEL ? 'vercel-runtime-cache' : 'memory',
       },
     }
-  },
-  // Nuxt requires a cache route rule to generate runtime _payload.json routes.
-  routeRules: {
-    '/**': { cache: { headersOnly: true, maxAge: 3600 } },
-    '/api/**': { cache: false },
   },
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL ?? process.env.POSTGRES_URL,
