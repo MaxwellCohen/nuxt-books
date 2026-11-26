@@ -1,8 +1,8 @@
 {
   "framework": "nuxt",
   "repo": "nuxt-books",
-  "commit": "90c0e214f83e8bfc56c199a9ab131133294370c8",
-  "ranAt": "2026-11-26T05:08:34.665Z",
+  "commit": "8d88e73ba33cc34fbbdb36b48cd89ccd482eeed7",
+  "ranAt": "2026-11-26T15:19:53.583Z",
   "results": {
     "css-inlining": {
       "claimedLabel": "first-party",
@@ -30,7 +30,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "Nitro defineCachedEventHandler({ maxAge: 5, swr: false })",
-      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669704346-1\" (handler ran once); after 5.5s got \"1795669710027-2\" (handler call #2)",
+      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795706383124-1\" (handler ran once); after 5.5s got \"1795706388816-2\" (handler call #2)",
       "test": "feature-tests/caching.spec.ts"
     },
     "route-prefetching": {
@@ -51,7 +51,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "routeRules { prerender: true } and { ssr: false } plus default per-request SSR",
-      "evidence": "prerendered: build file exists, stable \"2026-11-26T05:08:12.216Z on server\" across requests; ssr: \"2026-11-26T05:08:32.799Z on server\" then \"2026-11-26T05:08:32.829Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
+      "evidence": "prerendered: build file exists, stable \"2026-11-26T15:19:30.850Z on server\" across requests; ssr: \"2026-11-26T15:19:51.707Z on server\" then \"2026-11-26T15:19:51.741Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
       "test": "feature-tests/render-modes.spec.ts"
     },
     "reactivity": {
@@ -73,7 +73,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "@nuxt/scripts useScript (trigger onNuxtReady) + useScript partytown:true with @nuxtjs/partytown",
-      "evidence": "onNuxtReady: no <script> in SSR HTML (only a low-priority rel=preload warmup), executed at 113ms after DCL 61ms; partytown:true emitted type=text/partytown, fetched only as a fetch() from /~partytown/partytown-sandbox-sw.html (worker: blob), DOM write proxied back, tag became text/partytown-x — worker runtime comes from separately installed @nuxtjs/partytown",
+      "evidence": "onNuxtReady: no <script> in SSR HTML (only a low-priority rel=preload warmup), executed at 117ms after DCL 64ms; partytown:true emitted type=text/partytown, fetched only as a fetch() from /~partytown/partytown-sandbox-sw.html (worker: blob), DOM write proxied back, tag became text/partytown-x — worker runtime comes from separately installed @nuxtjs/partytown",
       "test": "feature-tests/third-party-scripts.spec.ts",
       "note": "1st-party claim rests on @nuxt/scripts useScript (official module, verified: deferred onNuxtReady load). Worker offload is NOT self-contained: useScript partytown:true only renders <script type=\"text/partytown\">; in a one-off build without @nuxtjs/partytown the tag was emitted, /~partytown/partytown.js returned 404 and the script was never fetched or run. With @nuxtjs/partytown installed it runs via the worker (this spec)."
     },
