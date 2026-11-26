@@ -1,15 +1,16 @@
 {
   "framework": "nuxt",
   "repo": "nuxt-books",
-  "commit": "5f1d30d36e036bd85c1daeee336d0ade6ecaa321",
-  "ranAt": "2026-11-26T04:57:58.709Z",
+  "commit": "91dc90c5dbff2b588413e22063e180efde0c3ef3",
+  "ranAt": "2026-11-26T05:05:40.934Z",
   "results": {
     "css-inlining": {
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "features.inlineStyles: true (nuxt.config.ts); scoped SFC <style> on the route",
       "evidence": "SSR HTML has 2 inline <style> tag(s), route CSS in 1; 0 <link rel=stylesheet> (none with route CSS); computed color applied",
-      "test": "feature-tests/css-inlining.spec.ts"
+      "test": "feature-tests/css-inlining.spec.ts",
+      "note": "Nuxt's default (features.inlineStyles = id => id.includes('.vue')) already inlines SFC CSS; `true` additionally inlines global CSS (0 stylesheet links remain)."
     },
     "font-optimization": {
       "claimedLabel": "first-party",
@@ -29,7 +30,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "Nitro defineCachedEventHandler({ maxAge: 5, swr: false })",
-      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669052862-1\" (handler ran once); after 5.5s got \"1795669059190-2\" (handler call #2)",
+      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669530592-1\" (handler ran once); after 5.5s got \"1795669536270-2\" (handler call #2)",
       "test": "feature-tests/caching.spec.ts"
     },
     "route-prefetching": {
@@ -50,7 +51,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "routeRules { prerender: true } and { ssr: false } plus default per-request SSR",
-      "evidence": "prerendered: build file exists, stable \"2026-11-26T04:56:29.147Z on server\" across requests; ssr: \"2026-11-26T04:57:48.088Z on server\" then \"2026-11-26T04:57:48.130Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
+      "evidence": "prerendered: build file exists, stable \"2026-11-26T05:05:17.031Z on server\" across requests; ssr: \"2026-11-26T05:05:39.052Z on server\" then \"2026-11-26T05:05:39.086Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
       "test": "feature-tests/render-modes.spec.ts"
     },
     "reactivity": {
@@ -58,7 +59,8 @@
       "status": "pass",
       "method": "Vue ref provided by the page and read only in a child component",
       "evidence": "after 3 updates text=3; page (owns ref) setup=1 renders=1; bound child setup=1 renders=4 (Vue 3.5 VDOM: the reading component's render effect re-runs, component-level granularity)",
-      "test": "feature-tests/reactivity.spec.ts"
+      "test": "feature-tests/reactivity.spec.ts",
+      "note": "Passes at Vue's granularity: setup never re-runs and the state-owning component never re-renders, but the component that reads the ref re-runs its render effect (VDOM, no Vapor mode in Vue 3.5)."
     },
     "bundle-analysis": {
       "claimedLabel": "experimental",
@@ -69,16 +71,17 @@
     },
     "third-party-scripts": {
       "claimedLabel": "first-party",
-      "status": "fail",
+      "status": "pass",
       "method": "@nuxt/scripts useScript (trigger onNuxtReady) + useScript partytown:true with @nuxtjs/partytown",
-      "evidence": "FAILED: Error: expect(locator).toHaveAttribute(expected) failed Locator:  locator('html') Expected: \"worker\"",
-      "test": "feature-tests/third-party-scripts.spec.ts"
+      "evidence": "onNuxtReady: no <script> in SSR HTML (only a low-priority rel=preload warmup), executed at 114ms after DCL 57ms; partytown:true emitted type=text/partytown, fetched only as a fetch() from /~partytown/partytown-sandbox-sw.html (worker: blob), DOM write proxied back, tag became text/partytown-x — worker runtime comes from separately installed @nuxtjs/partytown",
+      "test": "feature-tests/third-party-scripts.spec.ts",
+      "note": "1st-party claim rests on @nuxt/scripts useScript (official module, verified: deferred onNuxtReady load). Worker offload is NOT self-contained: useScript partytown:true only renders <script type=\"text/partytown\">; in a one-off build without @nuxtjs/partytown the tag was emitted, /~partytown/partytown.js returned 404 and the script was never fetched or run. With @nuxtjs/partytown installed it runs via the worker (this spec)."
     },
     "multi-host-deployment": {
       "claimedLabel": "first-party",
       "status": "fail",
       "method": "Nitro presets via NITRO_PRESET: vercel, netlify, cloudflare_module, node_server",
-      "evidence": "FAILED: Error: netlify: .netlify/v1/functions/server/main.mjs expect(received).toBe(expected) // Object.is equality Expected: true",
+      "evidence": "FAILED: Error: Command failed: npx nuxt build WARN  [PLUGIN_TIMINGS] Your build spent 92% of 3.5s inside plugin hooks (3.3s). Not measurable — 3 hooks whose calls overlap, so elapsed time covers work other calls were doing. Profile with node --cpu-prof:",
       "test": "feature-tests/multi-host-deployment.spec.ts"
     }
   }

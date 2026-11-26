@@ -24,4 +24,4 @@ merged into the results.
 | reactivity | Page owns a `ref`, a child reads it: after 3 clicks text = 3, page setup and render ran once, child setup once (the child's render effect does re-run: Vue 3.5 is VDOM). |
 | bundle-analysis | `nuxt analyze --no-serve` writes client and Nitro HTML reports under `<buildDir>/analyze` (`node_modules/.cache/nuxt/.nuxt/analyze` with Nuxt 5 compat). |
 | third-party-scripts | `useScript(..., { trigger: 'onNuxtReady' })` is absent from SSR HTML and runs after hydration; `useScript({ partytown: true })` emits `type="text/partytown"` and the `@nuxtjs/partytown` runtime executes it (`text/partytown-x`, DOM write proxied back). |
-| multi-host-deployment | `NITRO_PRESET` = vercel, netlify, cloudflare_module, node_server each build and produce the preset's output dirs. |
+| multi-host-deployment | `NITRO_PRESET` = vercel, netlify, cloudflare_module, node_server each build, produce the preset's output dirs, and `nitro.json` records the preset. Cloudflare needs the app-level `pg-native` stub alias (the `pg` driver's optional native addon), same as the optimized-max branch. |

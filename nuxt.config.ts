@@ -1,4 +1,9 @@
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
+
+// feature-tests/multi-host-deployment: Workers can't bundle pg's optional native addon
+// (same shim as the nuxt-books-optimized-max branch).
+const isCloudflare = process.env.NITRO_PRESET?.startsWith('cloudflare') ?? false;
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
@@ -34,6 +39,9 @@ export default defineNuxtConfig({
     '@nuxtjs/partytown',
   ],
   nitro: {
+    alias: isCloudflare
+      ? { 'pg-native': fileURLToPath(new URL('./server/lib/db/pg-native-stub.cjs', import.meta.url)) }
+      : undefined,
     future: {
       nativeSWR: true,
     },
