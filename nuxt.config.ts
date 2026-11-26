@@ -45,22 +45,25 @@ export default defineNuxtConfig({
     future: {
       nativeSWR: true,
     },
+    // Rules live under nitro.routeRules: with this Nuxt nightly, the top-level
+    // routeRules type is built from Nitro's augmented route types and drops
+    // cache/prerender, while nitro.routeRules uses Nitro's own types.
+    // Nuxt requires a cache route rule to generate runtime _payload.json routes.
+    routeRules: {
+      '/**': { cache: { headersOnly: true, maxAge: 3600 } },
+      '/api/**': { cache: false },
+      // feature-tests/font-optimization: preload the Inter face used on that route only.
+      '/feature-tests/font-optimization': { fonts: { preload: { Inter: true } } },
+      // feature-tests/render-modes: one prerendered, one per-request SSR (default), one client-only.
+      '/feature-tests/render-modes/prerendered': { prerender: true },
+      '/feature-tests/render-modes/spa': { ssr: false },
+    },
     storage: {
       cache: {
         base: 'nuxt-books:v1',
         driver: process.env.VERCEL ? 'vercel-runtime-cache' : 'memory',
       },
     }
-  },
-  // Nuxt requires a cache route rule to generate runtime _payload.json routes.
-  routeRules: {
-    '/**': { cache: { headersOnly: true, maxAge: 3600 } },
-    '/api/**': { cache: false },
-    // feature-tests/font-optimization: preload the Inter face used on that route only.
-    '/feature-tests/font-optimization': { fonts: { preload: { Inter: true } } },
-    // feature-tests/render-modes: one prerendered, one per-request SSR (default), one client-only.
-    '/feature-tests/render-modes/prerendered': { prerender: true },
-    '/feature-tests/render-modes/spa': { ssr: false },
   },
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL ?? process.env.POSTGRES_URL,
