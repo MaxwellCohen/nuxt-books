@@ -1,0 +1,85 @@
+{
+  "framework": "nuxt",
+  "repo": "nuxt-books",
+  "commit": "5f1d30d36e036bd85c1daeee336d0ade6ecaa321",
+  "ranAt": "2026-11-26T04:57:58.709Z",
+  "results": {
+    "css-inlining": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "features.inlineStyles: true (nuxt.config.ts); scoped SFC <style> on the route",
+      "evidence": "SSR HTML has 2 inline <style> tag(s), route CSS in 1; 0 <link rel=stylesheet> (none with route CSS); computed color applied",
+      "test": "feature-tests/css-inlining.spec.ts"
+    },
+    "font-optimization": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "@nuxt/fonts (official module) resolving `font-family: Inter`; routeRules fonts.preload",
+      "evidence": "14 Inter @font-face (font-display: swap, local URLs) + \"Inter Fallback\" with size-adjust; preload /_nuxt/fonts/23mtYSzxPVyLoxLNpoXveb5p0hE… (font/woff2); 0 Google Fonts requests, 1 same-origin font request(s)",
+      "test": "feature-tests/font-optimization.spec.ts"
+    },
+    "image-pipeline": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "@nuxt/image (official module) <NuxtImg sizes format=\"webp\"> served by IPX",
+      "evidence": "srcset 400w/800w/1600w via /_ipx/f_webp&q_82&s_400x250…, width/height 800x500, offscreen loading=lazy (loaded before scroll: false), srcset URLs served as image/webp",
+      "test": "feature-tests/image-pipeline.spec.ts"
+    },
+    "caching": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Nitro defineCachedEventHandler({ maxAge: 5, swr: false })",
+      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669052862-1\" (handler ran once); after 5.5s got \"1795669059190-2\" (handler call #2)",
+      "test": "feature-tests/caching.spec.ts"
+    },
+    "route-prefetching": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "<NuxtLink prefetch-on=\"interaction\"> and prefetch-on=\"visibility\"",
+      "evidence": "hover fetched /_nuxt/Bb6Uqt7n.js (prefetch-on=interaction), scrolling into view fetched /_nuxt/B6epUfMz.js (prefetch-on=visibility), both before click; payload requests: hover:/feature-tests/prefetch-hover/_payload.json scroll:/feature-tests/prefetch-visible/_payload.json click:/feature-tests/prefetch-visible/_payload.json",
+      "test": "feature-tests/route-prefetching.spec.ts"
+    },
+    "islands": {
+      "claimedLabel": "experimental",
+      "status": "pass",
+      "method": "experimental.componentIslands: *.server.vue server component + <LazyX hydrate-on-visible> island",
+      "evidence": "server component marker in SSR HTML but in 0 of 26 JS responses and 0 of 43 built client chunks; LazyFtCounter hydrate-on-visible became interactive",
+      "test": "feature-tests/islands.spec.ts"
+    },
+    "render-modes": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "routeRules { prerender: true } and { ssr: false } plus default per-request SSR",
+      "evidence": "prerendered: build file exists, stable \"2026-11-26T04:56:29.147Z on server\" across requests; ssr: \"2026-11-26T04:57:48.088Z on server\" then \"2026-11-26T04:57:48.130Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
+      "test": "feature-tests/render-modes.spec.ts"
+    },
+    "reactivity": {
+      "claimedLabel": "first-party",
+      "status": "pass",
+      "method": "Vue ref provided by the page and read only in a child component",
+      "evidence": "after 3 updates text=3; page (owns ref) setup=1 renders=1; bound child setup=1 renders=4 (Vue 3.5 VDOM: the reading component's render effect re-runs, component-level granularity)",
+      "test": "feature-tests/reactivity.spec.ts"
+    },
+    "bundle-analysis": {
+      "claimedLabel": "experimental",
+      "status": "pass",
+      "method": "`nuxt analyze --no-serve` (built-in CLI command marked experimental)",
+      "evidence": "`nuxt analyze --no-serve` (CLI labels it experimental) wrote node_modules/.cache/nuxt/.nuxt/analyze/default/client.html (928708 B) and node_modules/.cache/nuxt/.nuxt/analyze/default/nitro.html (289025 B)",
+      "test": "feature-tests/bundle-analysis.spec.ts"
+    },
+    "third-party-scripts": {
+      "claimedLabel": "first-party",
+      "status": "fail",
+      "method": "@nuxt/scripts useScript (trigger onNuxtReady) + useScript partytown:true with @nuxtjs/partytown",
+      "evidence": "FAILED: Error: expect(locator).toHaveAttribute(expected) failed Locator:  locator('html') Expected: \"worker\"",
+      "test": "feature-tests/third-party-scripts.spec.ts"
+    },
+    "multi-host-deployment": {
+      "claimedLabel": "first-party",
+      "status": "fail",
+      "method": "Nitro presets via NITRO_PRESET: vercel, netlify, cloudflare_module, node_server",
+      "evidence": "FAILED: Error: netlify: .netlify/v1/functions/server/main.mjs expect(received).toBe(expected) // Object.is equality Expected: true",
+      "test": "feature-tests/multi-host-deployment.spec.ts"
+    }
+  }
+}
