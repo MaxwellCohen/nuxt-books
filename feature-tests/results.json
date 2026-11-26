@@ -1,8 +1,8 @@
 {
   "framework": "nuxt",
   "repo": "nuxt-books",
-  "commit": "91dc90c5dbff2b588413e22063e180efde0c3ef3",
-  "ranAt": "2026-11-26T05:05:40.934Z",
+  "commit": "90c0e214f83e8bfc56c199a9ab131133294370c8",
+  "ranAt": "2026-11-26T05:08:34.665Z",
   "results": {
     "css-inlining": {
       "claimedLabel": "first-party",
@@ -30,7 +30,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "Nitro defineCachedEventHandler({ maxAge: 5, swr: false })",
-      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669530592-1\" (handler ran once); after 5.5s got \"1795669536270-2\" (handler call #2)",
+      "evidence": "2 API requests + SSR page within 5s TTL all got \"1795669704346-1\" (handler ran once); after 5.5s got \"1795669710027-2\" (handler call #2)",
       "test": "feature-tests/caching.spec.ts"
     },
     "route-prefetching": {
@@ -51,7 +51,7 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "routeRules { prerender: true } and { ssr: false } plus default per-request SSR",
-      "evidence": "prerendered: build file exists, stable \"2026-11-26T05:05:17.031Z on server\" across requests; ssr: \"2026-11-26T05:05:39.052Z on server\" then \"2026-11-26T05:05:39.086Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
+      "evidence": "prerendered: build file exists, stable \"2026-11-26T05:08:12.216Z on server\" across requests; ssr: \"2026-11-26T05:08:32.799Z on server\" then \"2026-11-26T05:08:32.829Z on server\"; spa (ssr:false): no SSR markup, rendered in browser",
       "test": "feature-tests/render-modes.spec.ts"
     },
     "reactivity": {
@@ -73,15 +73,15 @@
       "claimedLabel": "first-party",
       "status": "pass",
       "method": "@nuxt/scripts useScript (trigger onNuxtReady) + useScript partytown:true with @nuxtjs/partytown",
-      "evidence": "onNuxtReady: no <script> in SSR HTML (only a low-priority rel=preload warmup), executed at 114ms after DCL 57ms; partytown:true emitted type=text/partytown, fetched only as a fetch() from /~partytown/partytown-sandbox-sw.html (worker: blob), DOM write proxied back, tag became text/partytown-x — worker runtime comes from separately installed @nuxtjs/partytown",
+      "evidence": "onNuxtReady: no <script> in SSR HTML (only a low-priority rel=preload warmup), executed at 113ms after DCL 61ms; partytown:true emitted type=text/partytown, fetched only as a fetch() from /~partytown/partytown-sandbox-sw.html (worker: blob), DOM write proxied back, tag became text/partytown-x — worker runtime comes from separately installed @nuxtjs/partytown",
       "test": "feature-tests/third-party-scripts.spec.ts",
       "note": "1st-party claim rests on @nuxt/scripts useScript (official module, verified: deferred onNuxtReady load). Worker offload is NOT self-contained: useScript partytown:true only renders <script type=\"text/partytown\">; in a one-off build without @nuxtjs/partytown the tag was emitted, /~partytown/partytown.js returned 404 and the script was never fetched or run. With @nuxtjs/partytown installed it runs via the worker (this spec)."
     },
     "multi-host-deployment": {
       "claimedLabel": "first-party",
-      "status": "fail",
+      "status": "pass",
       "method": "Nitro presets via NITRO_PRESET: vercel, netlify, cloudflare_module, node_server",
-      "evidence": "FAILED: Error: Command failed: npx nuxt build WARN  [PLUGIN_TIMINGS] Your build spent 92% of 3.5s inside plugin hooks (3.3s). Not measurable — 3 hooks whose calls overlap, so elapsed time covers work other calls were doing. Profile with node --cpu-prof:",
+      "evidence": "NITRO_PRESET builds succeeded: vercel → .vercel/output/config.json; netlify → .netlify/functions-internal/server/main.mjs; cloudflare_module → .output/server/index.mjs; node_server → .output/server/index.mjs",
       "test": "feature-tests/multi-host-deployment.spec.ts"
     }
   }
