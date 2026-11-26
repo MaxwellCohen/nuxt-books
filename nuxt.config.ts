@@ -50,6 +50,9 @@ export default defineNuxtConfig({
     // https://nuxt.com/blog/v4-5#%EF%B8%8F-forwarded-preload-hints-on-prefetch
     prefetchPreloadTags: true,
     early404: true,
+    // Nuxt 4.7 turns Nitro/h3 auto-imports off under compatibilityVersion 5;
+    // the server routes (defineCachedEventHandler, getQuery, ...) still rely on them.
+    nitroAutoImports: true,
   },
   features: {
     // Production SSR embeds entry and component CSS in the HTML.
