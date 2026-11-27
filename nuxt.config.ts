@@ -1,9 +1,48 @@
 import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 
-// feature-tests/multi-host-deployment: Workers can't bundle pg's optional native addon
-// (same shim as the nuxt-books-optimized-max branch).
-const isCloudflare = process.env.NITRO_PRESET?.startsWith('cloudflare') ?? false;
+// Cloudflare builds: `deploy:cloudflare` sets CLOUDFLARE=1, Workers Builds sets
+// WORKERS_CI=1, and feature-tests/multi-host-deployment sets NITRO_PRESET.
+const isCloudflare = Boolean(
+  process.env.CLOUDFLARE ||
+    process.env.WORKERS_CI ||
+    process.env.CF_PAGES ||
+    process.env.NITRO_PRESET?.startsWith('cloudflare'),
+);
+const isNetlify = Boolean(process.env.NETLIFY) && !isCloudflare;
+const isVercel = Boolean(process.env.VERCEL) && !isCloudflare;
+
+const CACHE_BASE = 'nuxt-books:v1';
+
+function cacheStorage() {
+  if (isVercel) {
+    return {
+      driver: 'vercel-runtime-cache' as const,
+      base: CACHE_BASE,
+    };
+  }
+
+  if (isNetlify) {
+    return {
+      driver: 'netlify-blobs' as const,
+      name: 'nuxt-books-cache',
+      base: CACHE_BASE,
+    };
+  }
+
+  if (isCloudflare) {
+    return {
+      driver: 'cloudflare-kv-binding' as const,
+      binding: 'CACHE',
+      base: CACHE_BASE,
+    };
+  }
+
+  return {
+    driver: 'memory' as const,
+    base: CACHE_BASE,
+  };
+}
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
@@ -14,7 +53,8 @@ export default defineNuxtConfig({
     transpile: ['@lucide/vue'],
   },
   features: {
-    // feature-tests/css-inlining: embed entry + component CSS in SSR HTML.
+    // feature-tests/css-inlining: production SSR embeds entry + component CSS in the HTML.
+    // Nuxt keeps this off in dev so stylesheet HMR still works.
     inlineStyles: true,
   },
   devtools: { enabled: true },
@@ -42,6 +82,8 @@ export default defineNuxtConfig({
     ],
   },
   image: {
+    // Cloudflare Workers can't run IPX / sharp — skip optimization there.
+    provider: isCloudflare ? 'none' : 'auto',
     domains: ['images.gr-assets.com', 's.gr-assets.com'],
     quality: 82,
   },
@@ -57,6 +99,10 @@ export default defineNuxtConfig({
     '@nuxtjs/partytown',
   ],
   nitro: {
+    // Only force Workers when CLOUDFLARE/WORKERS_CI/CF_PAGES is set (or NITRO_PRESET
+    // already picks a Cloudflare preset). Vercel and Netlify auto-detect their presets.
+    preset: isCloudflare ? (process.env.NITRO_PRESET ?? 'cloudflare_module') : undefined,
+    // Workers can't bundle pg's optional native addon.
     alias: isCloudflare
       ? { 'pg-native': fileURLToPath(new URL('./server/lib/db/pg-native-stub.cjs', import.meta.url)) }
       : undefined,
@@ -77,11 +123,8 @@ export default defineNuxtConfig({
       '/feature-tests/render-modes/spa': { ssr: false },
     },
     storage: {
-      cache: {
-        base: 'nuxt-books:v1',
-        driver: process.env.VERCEL ? 'vercel-runtime-cache' : 'memory',
-      },
-    }
+      cache: cacheStorage(),
+    },
   },
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL ?? process.env.POSTGRES_URL,

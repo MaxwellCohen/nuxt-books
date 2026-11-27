@@ -24,7 +24,7 @@ Catalog and book pages don't use incremental static regeneration (ISR). A header
 
 The `/api/books`, `/api/books/count`, and `/api/books/:id` routes use [`defineCachedEventHandler`](https://nitro.build/docs/cache#cached-handlers). Cached responses remain fresh for one hour. After that, Nitro can serve the stale value while it refreshes the entry in the background. Stable hashed keys derived from normalized filters, pagination, or book IDs ensure that equivalent requests share an entry.
 
-On Vercel, Nitro stores these entries in [Vercel Runtime Cache](https://vercel.com/docs/caching/runtime-cache) under the versioned `nuxt-books:v1` namespace. Local development and tests use the same handlers with an in-memory cache. Change the namespace version only when every existing entry must be invalidated.
+On Vercel, Nitro stores these entries in [Vercel Runtime Cache](https://vercel.com/docs/caching/runtime-cache) under the versioned `nuxt-books:v1` namespace. On Netlify it uses [Netlify Blobs](https://docs.netlify.com/blobs/overview/) (`nuxt-books-cache` store). On Cloudflare Workers it uses [Workers KV](https://developers.cloudflare.com/kv/) (`CACHE` binding). Local development and tests use the same handlers with an in-memory cache. Change the namespace version only when every existing entry must be invalidated.
 
 ### Navigation and image prefetching
 
@@ -69,7 +69,7 @@ pnpm test:e2e
 
 The suite covers extracted-payload navigation, prefetching, `FastLink` behavior, search cancellation, pagination warming, and scroll restoration. Cached handlers use the in-memory storage driver during this local run.
 
-Only a Vercel deployment uses the Runtime Cache driver. After changing cache storage, keys, or handler policy, deploy a preview and inspect reads, writes, and hit rates in Vercel Runtime Cache Observability.
+Host-specific cache drivers are only exercised on deploy. After changing cache storage, keys, or handler policy, deploy a preview and inspect hits on that host (Vercel Runtime Cache Observability, Netlify Blobs, Cloudflare KV).
 
 ## Database
 

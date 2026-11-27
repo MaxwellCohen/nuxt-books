@@ -3,8 +3,7 @@
     "deploymentEnabled": {
       "**": false,
       "main": true,
-      "optimized": true,
-      "nuxt-books-optimized-max": true
+      "optimized": true
     }
   }
 }

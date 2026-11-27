@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nuxt-books-optimized",
+  "main": ".output/server/index.mjs",
+  // Workers Builds runs a bare `wrangler deploy` / `wrangler versions upload` on a
+  // clean checkout, so wrangler has to run the Cloudflare build itself.
+  "build": {
+    "command": "CLOUDFLARE=1 pnpm exec nuxt build"
+  },
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "f930a51b26aa472a9eb38433e37d79ba"
+    }
+  ]
+}
