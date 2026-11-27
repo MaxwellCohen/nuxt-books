@@ -1,10 +1,5 @@
 {
   "git": {
-    "deploymentEnabled": {
-      "**": false,
-      "main": true,
-      "optimized": true,
-      "nuxt-books-optimized-max": true
-    }
+    "deploymentEnabled": false
   }
 }
