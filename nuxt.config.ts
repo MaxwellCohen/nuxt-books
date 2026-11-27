@@ -31,18 +31,28 @@ export default defineNuxtConfig({
     // the server routes (defineCachedEventHandler, getQuery, ...) still rely on them.
     nitroAutoImports: true,
   },
+  // @nuxt/fonts finds Geist in the Tailwind --font-* variables, downloads it at build
+  // time, serves it from /_nuxt/fonts with @font-face + a size-adjusted fallback face,
+  // and preloads the variable Geist face.
+  fonts: {
+    defaults: { subsets: ['latin'] },
+    families: [
+      { name: 'Geist', provider: 'google', weights: ['100 900'], styles: ['normal'], preload: true },
+      { name: 'Geist Mono', provider: 'google', weights: [400], styles: ['normal'] },
+    ],
+  },
   image: {
     domains: ['images.gr-assets.com', 's.gr-assets.com'],
     quality: 82,
   },
   modules: [
+    '@nuxt/fonts',
     '@nuxt/image',
     '@nuxtjs/color-mode',
     '@nuxt/eslint',
     '@vercel/analytics',
     '@vercel/speed-insights',
     // feature-tests: official modules exercised by /feature-tests/*.
-    '@nuxt/fonts',
     '@nuxt/scripts',
     '@nuxtjs/partytown',
   ],
