@@ -31,9 +31,9 @@ function cacheStorage() {
   }
 
   if (isCloudflare) {
+    // Cache API instead of Workers KV, whose free tier caps writes at 1,000 a day.
     return {
-      driver: 'cloudflare-kv-binding' as const,
-      binding: 'CACHE',
+      driver: fileURLToPath(new URL('./server/lib/cache-api-driver.ts', import.meta.url)),
       base: CACHE_BASE,
     };
   }

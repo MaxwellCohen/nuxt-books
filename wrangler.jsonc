@@ -15,11 +15,5 @@
   },
   "observability": {
     "enabled": true
-  },
-  "kv_namespaces": [
-    {
-      "binding": "CACHE",
-      "id": "f930a51b26aa472a9eb38433e37d79ba"
-    }
-  ]
+  }
 }
